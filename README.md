@@ -1,1 +1,1 @@
-# Gocipe-Planner
+# Grocery Recipe-Planner
