@@ -5,9 +5,18 @@ const recipeSchema = new mongoose.Schema({
         type: String, 
         required: true
     },
-    ingredients: [String],
-    instructions: String,
-    createdAt: {type: Date, default: Date.now}
+    ingredients: {
+        type: String, 
+        required: true
+    },
+    instructions: {
+        type: String,
+        required: true
+    },
+    category: {
+        type: String,
+        required: true
+    }
 
 });
 
