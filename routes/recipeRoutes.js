@@ -21,8 +21,12 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/addRecipe', async (req, res) => {
+    console.log("Incoming request body", req.body);
+    const { name, ingredients, instructions, category} = req.body;
+
     try{
-        const recipe = new Recipe(req.body);
+        const recipe = new Recipe({name, ingredients, instructions, category});
+        console.log(recipe)
         await recipe.save();
         res.status(201).send(recipe);
     } catch (err) {
