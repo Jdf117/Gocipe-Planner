@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
             res.status(200).send("No recipes in database!");
         }
     } catch (err){
-        console.log("Could not get recipes");
+        console.log("Could not get recipes", err);
     }
 });
 
