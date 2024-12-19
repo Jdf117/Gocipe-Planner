@@ -6,8 +6,12 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const bodyParser = require('body-parser');
 const  User  = require('../models/userSchema');
 const express = require('express');
+const { check, validationResult } = require('express-validator');
 
 const router = express.Router();
+
+//token Black list for logout
+const tokenBlacklist = []; //Temporary store for blacklisted tokens 
 
 //Secret key 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -25,6 +29,12 @@ const options = {
 
 passport.use(new Strategy(options, async (payload, done) => {
     try{
+        //check if token is blacklisted
+        const authHeader = ExtractJwt.fromAuthHeaderAsBearerToken()(payload);
+        if( tokenBlacklist.includes(authHeader)) {
+            return done(null, false, { message: 'Token has been blacklisted' });
+        }
+
         const user = await User.findById(payload.id);
         if(!user){
             return done(null, false);
@@ -99,16 +109,52 @@ router.post('/login', async (req, res) => {
 })
 
 //user log out?
-router.post('logout', )
+router.post('/logout', passport.authenticate('jwt', { session: false}), (req, res) => {
+    try{
+        const token = req.headers.authorization?.split(' ')[1]; // Extract the token
+        console.log(token);
+        if(!token){
+            return res.status(400).json('No token provided');
+        }
+    
+        //Add the token to the blacklist
+        tokenBlacklist.push(token);
+    
+        res.status(200).json({message: 'Logged out successfully'});
+    } catch(err){
+        console.log(err);
+        res.status(500).json({message: 'Logout failed'});
+    }
+
+} )
+
 
 //Edit user 
-router.put('/updateProfile', passport.authenticate('jwt', {session: false}), async (req, res) => {
+router.put('/updateProfile', passport.authenticate('jwt', {session: false}),
+[
+    //check email and username format 
+    check('email').optional().isEmail().withMessage('Invalid email format'), 
+    check('username').optional().isLength({ min: 3 }).withMessage('Username must be at least 3 characters'),
+],
+ async (req, res) => {
+    const errors = validationResult(req); // Collect validation errors
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() }); // Send validation errors if any
+    }
     const {username, email} = req.body;
     try{
+// Check if the new email already exists
+        if (email) {
+            const emailCheck = await User.findOne({ email });
+            if (emailCheck && emailCheck._id.toString() !== req.user._id.toString()) {
+            return res.status(400).json({ message: 'Email already in use by another user' });
+            }
+        }
+
         const updateUser = await User.findByIdAndUpdate(
             req.user._id,
-            {email},
-            {new: true}
+            {username, email},
+            {new: true, runValidators: true}
         );
         res.status(200).json({message: 'Profile updated', user: updateUser});
     } catch (err){

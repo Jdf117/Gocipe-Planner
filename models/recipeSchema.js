@@ -17,11 +17,15 @@ const recipeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    //add user id : can belong to a specific user or global user (global user List can be accessed by everyone)
-    userId: {
+    //add user id : if userId is null, the recipe is global, otherwise it belongs to a specific user
+    username: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        default: null
+    },
+    isGlobal:{
+        type: Boolean,
+        default: true //automatically set to true if userId is null 
     }
 });
 
