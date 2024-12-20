@@ -3,6 +3,7 @@ const Recipe = require('../models/recipeSchema');
 const  User  = require('../models/userSchema');
 const router = express.Router();
 const mongoose = require('mongoose');
+const passport = require('passport');
 
 //get recipe list 
 router.get('/', async (req, res) => {
