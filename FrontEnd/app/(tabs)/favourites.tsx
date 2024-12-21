@@ -1,10 +1,11 @@
 import { View, Text } from 'react-native';
+import {styles } from '@/styles/styles'
 
 const favourites = () => {
     return (
         <>
-        <View>
-            <Text> Favourite Screen</Text>
+        <View style={styles.container}>
+           <Text>No Favourite Recipes yet!</Text>
         </View>
         </>
     )

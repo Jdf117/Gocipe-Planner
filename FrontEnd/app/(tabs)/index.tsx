@@ -1,8 +1,7 @@
-import { Text, View, StyleSheet, TouchableOpacity, TextInput, ScrollView } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, ScrollView, Button } from "react-native";
 import { Link} from 'expo-router'
 import React, { useState } from 'react';
-
-
+import { styles } from '@/styles/styles';
 export default function Index() {
 const [search, setSearch] = useState('');
 
@@ -15,23 +14,15 @@ const [search, setSearch] = useState('');
         <Link href = "/login" style={styles.button}>Login</Link>
         <TextInput
             
+            style={styles.input} 
+            onChangeText = {setSearch}
+            value={search}
+            placeholder="Find Recipes"
         />
-      
+        
+        <TouchableOpacity style={styles.button}><Button title="SEARCH" /></TouchableOpacity>
     </View>
     </>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  button: {
-    fontSize: 20,
-    textDecorationLine: 'underline',
-    color: 'Black',
-    padding: 10
-  }
-})

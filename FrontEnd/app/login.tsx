@@ -26,6 +26,7 @@ export default function LoginScreen() {
                 />
                
                <TouchableOpacity style={styles.button}><Button title="LOGIN" /></TouchableOpacity>
+               <TouchableOpacity style={styles.button}><Button title="CREATE ACCOUNT" /></TouchableOpacity>
             </SafeAreaView>
         </SafeAreaProvider>        
         </>

@@ -10,8 +10,9 @@ export const styles = StyleSheet.create({
         fontSize: 20,
         textDecorationLine: 'underline',
         color: 'Black',
-        padding: 0,
-        width: 200
+        padding: 10,
+        alignItems: 'center',
+        justifyContent: 'center'
       },
       input: {
         height: 40,
